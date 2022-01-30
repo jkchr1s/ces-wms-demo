@@ -1,0 +1,120 @@
+openapi: 3.0.0
+info:
+  description: A demo project for CES that lists movies for a specified genre.
+  version: "1.0"
+  title: CES Demo
+  contact:
+    name: Chris Bethel
+    url: https://github.com/jkchr1s
+    email: bethel.chris@gmail.com
+paths:
+  /genre:
+    get:
+      summary: Get all movie genres
+      responses:
+        200:
+          description: Success
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Genres'
+  /genre/{genreId}:
+    get:
+      summary: Returns a movie for the specified genre.
+      parameters:
+        - in: path
+          name: genreId
+          schema:
+            type: integer
+          required: true
+          description: Genre internal identifier
+        - in: query
+          name: not
+          schema:
+            type: integer
+          required: false
+          description: Excludes a movie internal identifier from being returned.
+      responses:
+        200:
+          description: Success
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Movie'
+        404:
+          description: Not Found
+components:
+  schemas:
+    Genre:
+      type: object
+      properties:
+        id:
+          type: integer
+          description: The genre's internal identifier
+          example: 1
+        name:
+          type: string
+          description: The genre name
+          example: Horror
+    Genres:
+      type: array
+      items:
+        $ref: '#/components/schemas/Genre'
+    Movie:
+      type: object
+      properties:
+        id:
+          type: integer
+          description: The movie's internal identifier
+          example: 1
+        name:
+          type: string
+          description: The name of the movie
+        rating_id:
+          type: integer
+          description: The rating's internal identifier
+          example: 1
+        rating:
+          $ref: '#/components/schemas/Rating'
+        release_year:
+          type: integer
+          description: The year that the movie was released
+        img_url:
+          type: string
+          description: The URL to an image of the movie.
+        info_url:
+          type: string
+          description: The URL to additional information about the movie.
+        critic_notes:
+          type: string
+          description: Notes about the movie from Rotten Tomatoes critic.
+        tmdb_id:
+          type: integer
+          description: The TMDB movie identifier.
+        generes:
+          $ref: '#/components/schemas/Genres'
+    MovieVoteResult:
+      type: object
+      description: The TMDB movie voting results
+      properties:
+        name:
+          type: string
+          description: The name of the movie
+        vote_average:
+          type: integer
+          description: The averge voting score (scale of 0-10)
+          example: 7.7
+        vote_count:
+          type: integer
+          description: Number of people who voted on the movie
+          example: 5022
+    Rating:
+      type: object
+      properties:
+        id:
+          type: integer
+          description: The rating's internal identifier
+          example: 1
+        name:
+          type: string
+          description: The movie rating
